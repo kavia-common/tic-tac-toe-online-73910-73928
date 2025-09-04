@@ -15,7 +15,7 @@ export default function Game() {
   const [starter, setStarter] = useState('X');
   const [mode, setMode] = useState('PVC'); // 'PVP' | 'PVC'
   const [aiMark, setAiMark] = useState('O'); // Which mark the AI uses
-  const [aiLevel, setAiLevel] = useState(AI_LEVELS.SIMPLE);
+  const [aiLevel, setAiLevel] = useState(AI_LEVELS.LEVEL_2);
 
   const {
     squares,
@@ -76,15 +76,32 @@ export default function Game() {
             Mode: {mode === 'PVP' ? 'PVP' : 'PVC'}
           </button>
           {mode === 'PVC' && (
-            <button
-              type="button"
-              className="btn"
-              onClick={toggleAiMark}
-              aria-label="Toggle AI mark"
-              title="Toggle AI mark"
-            >
-              AI: {aiMark}
-            </button>
+            <>
+              <button
+                type="button"
+                className="btn"
+                onClick={toggleAiMark}
+                aria-label="Toggle AI mark"
+                title="Toggle AI mark"
+              >
+                AI: {aiMark}
+              </button>
+              <label className="visually-hidden" htmlFor="ai-level">AI Difficulty</label>
+              <select
+                id="ai-level"
+                className="btn"
+                value={aiLevel}
+                onChange={(e) => setAiLevel(Number(e.target.value))}
+                aria-label="Select AI difficulty"
+                title="Select AI difficulty"
+              >
+                <option value={AI_LEVELS.LEVEL_1}>Level 1 - Easy (Random)</option>
+                <option value={AI_LEVELS.LEVEL_2}>Level 2 - Simple</option>
+                <option value={AI_LEVELS.LEVEL_3}>Level 3 - Heuristic</option>
+                <option value={AI_LEVELS.LEVEL_4}>Level 4 - Smart</option>
+                <option value={AI_LEVELS.LEVEL_5}>Level 5 - Unbeatable</option>
+              </select>
+            </>
           )}
           <button
             type="button"

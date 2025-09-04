@@ -14,9 +14,9 @@ import { AI_LEVELS, computeAiMove } from '../utils/ai';
 // PUBLIC_INTERFACE
 export default function useTicTacToe(
   initialStarter = 'X',
-  options = { mode: 'PVP', aiMark: 'O', aiLevel: AI_LEVELS.SIMPLE }
+  options = { mode: 'PVP', aiMark: 'O', aiLevel: AI_LEVELS.LEVEL_2 }
 ) {
-  const { mode = 'PVP', aiMark = 'O', aiLevel = AI_LEVELS.SIMPLE } = options || {};
+  const { mode = 'PVP', aiMark = 'O', aiLevel = AI_LEVELS.LEVEL_2 } = options || {};
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(initialStarter === 'X');
 
