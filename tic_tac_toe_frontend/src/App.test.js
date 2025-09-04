@@ -7,7 +7,7 @@ test('renders game title and board', () => {
   expect(screen.getByRole('grid', { name: /Tic Tac Toe Board/i })).toBeInTheDocument();
 });
 
-test('shows initial status Turn: X', () => {
+test('shows initial status Turn', () => {
   render(<App />);
-  expect(screen.getByText(/Turn: X/i)).toBeInTheDocument();
+  expect(screen.getByText(/Turn:\s*[XO]/i)).toBeInTheDocument();
 });

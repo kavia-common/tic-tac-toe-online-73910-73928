@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import useTicTacToe from '../hooks/useTicTacToe';
 import Board from './Board';
+import { AI_LEVELS } from '../utils/ai';
 
 /**
  * Game component manages UI layout for the Tic Tac Toe game:
@@ -12,6 +13,10 @@ import Board from './Board';
 // PUBLIC_INTERFACE
 export default function Game() {
   const [starter, setStarter] = useState('X');
+  const [mode, setMode] = useState('PVC'); // 'PVP' | 'PVC'
+  const [aiMark, setAiMark] = useState('O'); // Which mark the AI uses
+  const [aiLevel, setAiLevel] = useState(AI_LEVELS.SIMPLE);
+
   const {
     squares,
     xIsNext,
@@ -22,7 +27,7 @@ export default function Game() {
     play,
     reset,
     setStarter: setStarterInGame,
-  } = useTicTacToe(starter);
+  } = useTicTacToe(starter, { mode, aiMark, aiLevel });
 
   const handleReset = () => {
     reset(starter);
@@ -34,16 +39,53 @@ export default function Game() {
     setStarterInGame(nextStarter);
   };
 
+  const toggleMode = () => {
+    setMode(prev => (prev === 'PVP' ? 'PVC' : 'PVP'));
+  };
+
+  const toggleAiMark = () => {
+    setAiMark(prev => (prev === 'X' ? 'O' : 'X'));
+  };
+
   const gameOver = Boolean(winner) || isDraw;
+  const modeLabel = mode === 'PVP' ? '2-Player Local' : 'Player vs Computer';
+
+  // When in PVC, disable board if it's AI's turn
+  const boardDisabled = useMemo(() => {
+    if (gameOver) return true;
+    if (mode !== 'PVC') return false;
+    const turnMark = xIsNext ? 'X' : 'O';
+    return turnMark === aiMark;
+  }, [mode, xIsNext, aiMark, gameOver]);
 
   return (
     <div className="game-shell" aria-live="polite">
       <div className="header">
         <div className="brand">
           <h1 className="title">Tic Tac Toe</h1>
-          <span className="badge">2-Player Local</span>
+          <span className="badge">{modeLabel}</span>
         </div>
         <div className="controls">
+          <button
+            type="button"
+            className="btn"
+            onClick={toggleMode}
+            aria-label="Toggle game mode"
+            title="Toggle game mode"
+          >
+            Mode: {mode === 'PVP' ? 'PVP' : 'PVC'}
+          </button>
+          {mode === 'PVC' && (
+            <button
+              type="button"
+              className="btn"
+              onClick={toggleAiMark}
+              aria-label="Toggle AI mark"
+              title="Toggle AI mark"
+            >
+              AI: {aiMark}
+            </button>
+          )}
           <button
             type="button"
             className="btn"
@@ -76,7 +118,7 @@ export default function Game() {
       <Board
         squares={squares}
         onPlay={play}
-        disabled={gameOver}
+        disabled={boardDisabled}
         winningLine={winningLine}
       />
 
